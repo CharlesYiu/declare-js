@@ -123,6 +123,7 @@ function runDeclareJS(observe = true) {
         "video",
         "wbr"
     ]
+    let declaredTags = {}
     function updateDeclaration(declarationElement) {
         if (tagName = declarationElement.getAttribute("name")) {
             let elements = declarationElement.parentElement.getElementsByTagName(tagName)
@@ -137,7 +138,7 @@ function runDeclareJS(observe = true) {
     }
     function removeDeclaration(parentElement, tagName) {
         if (tagName !== null) {
-            takenTagNames.splice(takenTagNames.indexOf(tagName.toLowerCase()))
+            delete declaredTags[tagName]
             let elements = parentElement.getElementsByTagName(tagName)
             for (let i = 0; i < elements.length; i++) {
                 const element = elements.item(i)
@@ -146,9 +147,9 @@ function runDeclareJS(observe = true) {
         }
     }
     function addDeclaration(declarationElement) {
-        if (tagName = declarationElement.getAttribute("name")) {
-            if (takenTagNames.includes(tagName.toLowerCase())) throw Error(`The tag ('name' attribute) '${tagName}' is taken`)
-            takenTagNames.push(tagName.toLowerCase())
+        if (tagName = declarationElement.getAttribute("name").toLowerCase()) {
+            if (takenTagNames.includes(tagName) || Object.keys(declaredTags).includes(tagName)) throw Error(`The tag ('name' attribute) '${tagName}' is taken`)
+            declaredTags[tagName] = declarationElement
             declarationElement.hidden = true
             updateDeclaration(declarationElement)
         } else throw Error(`Declaration has no attribute 'name'`)
@@ -160,9 +161,12 @@ function runDeclareJS(observe = true) {
     if (!observe) return
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-            if (mutation.target.tagName === "DECLARE" &&mutation.type === "childList") updateDeclaration(mutation.target)
+            if (mutation.target.tagName === "DECLARE" && mutation.type === "childList") updateDeclaration(mutation.target)
             mutation.addedNodes.forEach(element => {
                 if (element.tagName === "DECLARE") addDeclaration(element)
+                if (Object.keys(declaredTags).includes(element.tagName.toLowerCase())) {
+                    updateDeclaration(declaredTags[element.tagName.toLowerCase()])
+                }
             })
             mutation.removedNodes.forEach(element => {
                 if (element.tagName === "DECLARE") removeDeclaration(mutation.target, element.getAttribute("name"))
