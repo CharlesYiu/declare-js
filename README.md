@@ -33,7 +33,8 @@ you can add an element with the tag you chose in it.
 ```html
 <helloworld></helloworld>
 ```
-Then when you preview the page it will automatically add the contents of your declared element like this:  
+Then when you load the page it will automatically add the contents of your declared element like this:  
+(If observing is not disabled)
 ```html
 <helloworld>
   <p>Hello World</p>
@@ -67,3 +68,12 @@ But this is:
   </div>
 </div>
 ```
+# Errors
+## Declaration has no attribute 'name'
+This error indicates that one of your declarations don't have an attribute called 'name'.  
+This is problematic because you will not be able to use the declaration.
+## The tag ('name' attribute) 'the-tag-name' is taken
+This error is thrown when a tag is already being used or reserved for html.  
+(e.g. 'div', 'span', 'h1')
+## Other errors
+Please open an issue to get further help and support.
