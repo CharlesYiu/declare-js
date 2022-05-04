@@ -133,22 +133,42 @@ function runDeclareJS(observe = true) {
                 for (let ci = 0; ci < declarationElement.children.length; ci++) {
                     element.appendChild(declarationElement.children.item(ci).cloneNode(true))
                 }
+                for (let ai = 0; ai < declarationElement.attributes.length; ai++) {
+                    const attribute = declarationElement.attributes.item(ai)
+                    if (attribute.name !== "name" && attribute.name !== "hidden") {
+                        element.setAttribute(attribute.name, attribute.value)
+                    }
+                }
             }
         } else throw Error(`Declaration has no attribute 'name'`)
     }
-    function removeDeclaration(parentElement, tagName) {
-        if (tagName !== null) {
+    function removeDeclaration(parentElement, declarationElement) {
+        if (tagName = declarationElement.getAttribute("name")) {
             delete declaredTags[tagName]
             let elements = parentElement.getElementsByTagName(tagName)
             for (let i = 0; i < elements.length; i++) {
                 const element = elements.item(i)
                 while (element.lastChild) element.removeChild(element.lastChild)
+                for (let ai = 0; ai < declarationElement.attributes.length; ai++) {
+                    const attribute = declarationElement.attributes.item(ai)
+                    if (attribute.name !== "name" && attribute.name !== "hidden") {
+                        element.removeAttribute(attribute.name, attribute.value)
+                    }
+                }
             }
         }
     }
     function addDeclaration(declarationElement) {
         if (tagName = declarationElement.getAttribute("name").toLowerCase()) {
-            if (takenTagNames.includes(tagName) || Object.keys(declaredTags).includes(tagName)) throw Error(`The tag ('name' attribute) '${tagName}' is taken`)
+            if (takenTagNames.includes(tagName)) throw Error(`The tag ('name' attribute) '${tagName}' is taken`)
+            const scopeDeclarations = declarationElement.parentElement.getElementsByTagName("DECLARE")
+            for (let i = 0; i < scopeDeclarations.length; i++) {
+                const scopeDeclaration = scopeDeclarations.item(i)
+                if (otherTagName = scopeDeclaration.getAttribute("name") && scopeDeclaration !== declarationElement) {
+                    if (tagName === otherTagName) throw Error(`The tag ('name' attribute) '${tagName}' is taken`)
+                }
+            }
+            declaredTags[tagName] = declarationElement
             declaredTags[tagName] = declarationElement
             declarationElement.hidden = true
             updateDeclaration(declarationElement)
@@ -161,15 +181,15 @@ function runDeclareJS(observe = true) {
     if (!observe) return
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-            if (mutation.target.tagName === "DECLARE" && mutation.type === "childList") updateDeclaration(mutation.target)
+            if (mutation.type === "childList" && mutation.target.tagName === "DECLARE") updateDeclaration(mutation.target)
             mutation.addedNodes.forEach(element => {
                 if (element.tagName === "DECLARE") addDeclaration(element)
-                if (Object.keys(declaredTags).includes(element.tagName.toLowerCase())) {
+                else if (Object.keys(declaredTags).includes(element.tagName.toLowerCase())) {
                     updateDeclaration(declaredTags[element.tagName.toLowerCase()])
                 }
             })
             mutation.removedNodes.forEach(element => {
-                if (element.tagName === "DECLARE") removeDeclaration(mutation.target, element.getAttribute("name"))
+                if (element.tagName === "DECLARE") removeDeclaration(mutation.target, element)
             })
         })
     })

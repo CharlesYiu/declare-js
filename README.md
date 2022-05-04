@@ -18,9 +18,13 @@ then call it's function later like this:
 ```js
 runDeclareJS()
 ```
+or if you don't want it to observe changes:
+```js
+runDeclareJS(observe=false)
+```
 # Declaring 
 To declare, you simply add an element with `declare` as the tag of it.  
-Then you have to specify the tag you want that is not taken to use with the attribute `name`.  
+Then you have to specify the tag you want that is not taken in the scope to use with the attribute `name`.  
 In this example, the tag we will be using will be `helloworld`.  
 ```html
 <declare name="helloworld">
@@ -53,7 +57,7 @@ So using the declared html like this will be invalid:
 <!-- This is outside of the declaration's scope (the div) -->
 <helloworld></helloworld>
 ```
-But this is:
+But these will be valid:
 ```html
 <div>
   <declare name="helloworld">
@@ -66,6 +70,22 @@ But this is:
       <helloworld></helloworld>
     </div>
   </div>
+</div>
+```
+```html
+<div>
+  <declare name="helloworld">
+    <p>Hello World</p>
+  </declare>
+  <helloworld></helloworld>
+</div>
+<div>
+  <!-- This is valid because it is defined in another scope -->
+  <declare name="helloworld">
+    <p>Hello World 2</p>
+  </declare>
+  <!-- So this will display 'Hello World 2' instead of 'Hello World' -->
+  <helloworld></helloworld>
 </div>
 ```
 # Errors
