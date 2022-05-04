@@ -129,9 +129,21 @@ function runDeclareJS(observe = true) {
             let elements = declarationElement.parentElement.getElementsByTagName(tagName)
             for (let i = 0; i < elements.length; i++) {
                 const element = elements.item(i)
-                while (element.lastChild) element.removeChild(element.lastChild)
+                let elementChildren = document.createDocumentFragment()
+                while (element.lastChild) {
+                    if (firstChild = elementChildren.firstChild) elementChildren.insertBefore(element.lastChild, firstChild)
+                    else elementChildren.appendChild(element.lastChild.cloneNode(true))
+                    element.removeChild(element.lastChild)
+                }
                 for (let ci = 0; ci < declarationElement.children.length; ci++) {
-                    element.appendChild(declarationElement.children.item(ci).cloneNode(true))
+                    const childElement = declarationElement.children.item(ci).cloneNode(true)
+                    element.appendChild(childElement)
+                    if (["", "true"].includes(childElement.getAttribute("parent"))) {
+                        childElement.removeAttribute("parent")
+                        for (let eci = 0; eci < elementChildren.children.length; eci++) {
+                            childElement.appendChild(elementChildren.children.item(eci).cloneNode(true))
+                        }
+                    }
                 }
                 for (let ai = 0; ai < declarationElement.attributes.length; ai++) {
                     const attribute = declarationElement.attributes.item(ai)
