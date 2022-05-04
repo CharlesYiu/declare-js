@@ -124,27 +124,32 @@ function runDeclareJS(observe = true) {
         "wbr"
     ]
     let declaredTags = {}
+    function setParent(target, children) {
+        console.log(["", "true"].includes(target.getAttribute("parent")), target, children)
+        if (["", "true"].includes(target.getAttribute("parent"))) {
+            target.removeAttribute("parent")
+            for (let eci = 0; eci < children.length; eci++) {
+                target.appendChild(children.item(eci).cloneNode(true))
+            }
+        }
+    }
     function updateDeclaration(declarationElement) {
         if (tagName = declarationElement.getAttribute("name")) {
             let elements = declarationElement.parentElement.getElementsByTagName(tagName)
             for (let i = 0; i < elements.length; i++) {
                 const element = elements.item(i)
-                let elementChildren = document.createDocumentFragment()
+                let collection = document.createDocumentFragment()
                 while (element.lastChild) {
-                    if (firstChild = elementChildren.firstChild) elementChildren.insertBefore(element.lastChild, firstChild)
-                    else elementChildren.appendChild(element.lastChild.cloneNode(true))
+                    if (firstChild = collection.firstChild) collection.insertBefore(element.lastChild.cloneNode(true), firstChild)
+                    else collection.appendChild(element.lastChild.cloneNode(true))
                     element.removeChild(element.lastChild)
                 }
                 for (let ci = 0; ci < declarationElement.children.length; ci++) {
                     const childElement = declarationElement.children.item(ci).cloneNode(true)
                     element.appendChild(childElement)
-                    if (["", "true"].includes(childElement.getAttribute("parent"))) {
-                        childElement.removeAttribute("parent")
-                        for (let eci = 0; eci < elementChildren.children.length; eci++) {
-                            childElement.appendChild(elementChildren.children.item(eci).cloneNode(true))
-                        }
-                    }
+                    setParent(childElement, collection.children)
                 }
+                setParent(declarationElement, collection.children)
                 for (let ai = 0; ai < declarationElement.attributes.length; ai++) {
                     const attribute = declarationElement.attributes.item(ai)
                     if (attribute.name !== "name" && attribute.name !== "hidden") {

@@ -90,7 +90,7 @@ But these will be valid:
 </div>
 ```
 ## Understanding Parents
-The attribute `parent` is used in a element in the `declare` element.  
+The attribute `parent` is used in the `declare` element or any element in the `declare` element.  
 When used, it appends every child in the reference element into the element with the attribute.  
 This is useful for declaring templates.
 ```html
