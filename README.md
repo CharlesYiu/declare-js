@@ -1,19 +1,21 @@
-# [declare.js](https://charlesyiu.github.io/declare-js/declare.js)
+# [declare.js](https://charrcc.github.io/declare-js/declare.js)
 Allows declaring tags with html inside and reusing them without rewriting
+# Please read
+This repository's ownership was recently transferred to [@charrcc](https://github.com/charrcc) from [@charlesyiu](https://github.com/charlesyiu), so it's github pages subdomain has changed and should be changed as soon as possible.
 # Documentation
 ## Import the script
 ```html
-<script src="https://charlesyiu.github.io/declare-js/declare.js" defer></script>
+<script src="https://charrcc.github.io/declare-js/declare.js" defer></script>
 ```
 *Note: For other options please check below*
 ### If you don't want it to observe the page
 ```html
-<script src="https://charlesyiu.github.io/declare-js/declare.js" defer observe=false></script>
+<script src="https://charrcc.github.io/declare-js/declare.js" defer observe=false></script>
 ```
 *Note: Changes to `declare` and reference elements will not be updated and you will have to re-run the function shown below.*   
 ### If you want it to not automatically run
 ```html
-<script src="https://charlesyiu.github.io/declare-js/declare.js" autorun=false></script>
+<script src="https://charrcc.github.io/declare-js/declare.js" autorun=false></script>
 ```
 *Note: You will have to run the function shown below*
 ### Run with the function
